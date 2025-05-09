@@ -35,10 +35,14 @@ jobs:
 
       - name: Check coverage
         run: |
-          COVERAGE=$(pytest --cov=src --cov-report=term-missing | tail -n 10)
-          echo "$COVERAGE"
-          if [[ "$COVERAGE" =~ "70%" ]]; then
-            echo "Coverage is sufficient."
+          COVERAGE_OUTPUT=$(pytest --cov=src --cov-report=term-missing)
+          echo "$COVERAGE_OUTPUT"
+          COVERAGE_PERCENT=$(echo "$COVERAGE_OUTPUT" | grep TOTAL | awk '{print $NF}' | sed 's/%//')
+          MIN_COVERAGE=70
+      
+          if (( $(echo "$COVERAGE_PERCENT < $MIN_COVERAGE" | bc -l) )); then
+            echo "❌ Coverage is below the expected threshold ($MIN_COVERAGE%). Actual: $COVERAGE_PERCENT%"
+            exit 1
           else
-            echo "Coverage is below the expected threshold!" && exit 1
+            echo "✅ Coverage is sufficient: $COVERAGE_PERCENT%"
           fi
