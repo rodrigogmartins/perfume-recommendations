@@ -1,28 +1,28 @@
-# Recomendação de perfumes com base em gostos do usuário
+# Perfume recommendation based on user preferences
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](../README.md) [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](README.pt-br.md)
 
-## Caso de Uso
-Esta aplicação tem como objetivo fornecer recomendações inteligentes de perfumes com base nas preferências pessoais de cada usuário. A API permite que os usuários informem quais perfumes possuem, quais gostam, quais não gostam, além de notas e acordes olfativos que apreciam ou desejam evitar.
+## Use Case
+This application aims to provide intelligent perfume recommendations based on each user's personal preferences. The API allows users to specify which perfumes they own, which ones they like or dislike, as well as olfactory notes and accords they enjoy or wish to avoid.
 
-Com base nessas informações, aliadas a dados contextuais — como clima, estação do ano e turno do dia em que o perfume será usado —, a API filtra e sugere perfumes ideais, respeitando os critérios de preferência e evitando fragrâncias indesejadas ou já adquiridas.
+Based on this information, combined with contextual data — such as weather, season, and time of day the perfume will be worn — the API filters and suggests ideal perfumes, respecting preference criteria and avoiding unwanted or already owned fragrances.
 
-A base de perfumes armazenada contém atributos ricos, como acordes, notas, recomendações de uso e imagem ilustrativa. A recomendação é feita de forma dinâmica: o usuário pode fornecer filtros personalizados na chamada da API ou, caso prefira, a recomendação será baseada unicamente em seu perfil salvo na base de dados.
+The stored perfume database contains rich attributes such as accords, notes, usage recommendations, and illustrative images. Recommendations are generated dynamically: users can provide custom filters in the API request or, if they prefer, the recommendation will be based solely on their saved profile in the database.
 
-Essa abordagem torna a experiência altamente personalizada, útil tanto para consumidores em busca do próximo perfume ideal quanto para e-commerces ou marketplaces que desejam oferecer recomendações mais assertivas e contextuais.
+This approach makes the experience highly personalized, useful both for consumers looking for their next ideal fragrance and for e-commerce platforms or marketplaces that want to offer more accurate and contextual recommendations.
 
 
-## 🚀 Passo a Passo da Aplicação de Recomendação de Perfumes
+## 🚀 Step-by-Step Guide to the Perfume Recommendation Process
 
-### 1. 📥 Recebimento da Requisição
+### 1. 📥 Receiving the Request
 
-A API recebe uma requisição com o seguinte payload (todos os campos são opcionais):
+The API receives a request with the following payload (all fields are optional):
 
 ```json
 {
-   "ownedPerfumes": ["uuid1", "uuid2"],
-   "likedPerfumes": ["uuid3"],
-   "notLikedPerfumes": ["uuid4"],
+   "ownedPerfumes": ["1", "2", "3"],
+   "likedPerfumes": ["3"],
+   "notLikedPerfumes": ["4"],
    "likedNotes": ["vanilla", "eucalyptus"],
    "notLikedNotes": ["pine", "oud"],
    "likedAccords": ["leather", "sweet"],
@@ -33,42 +33,43 @@ A API recebe uma requisição com o seguinte payload (todos os campos são opcio
 }
 ```
 
-### 2. 🧠 Definição dos Critérios de Filtro
 
-- Se o input da requisição contiver filtros, eles são utilizados.
-- Caso contrário, são utilizados os dados previamente salvos no perfil do usuário.
-- Caso nenhum dado esteja presente, o sistema pode retornar perfumes genéricos ou mais populares (opcional).
+### 2. 🧠 Defining the Filtering Criteria
 
-### 3. 🧩 Enriquecimento de Dados com Inferência
+- If the request input contains filters, they are used.
+- Otherwise, the data previously saved in the user's profile is used.
+- If no data is available, the system may return generic or popular perfumes (optional).
 
-Para perfumes que não possuem informações de uso (clima, turno, estação), o sistema infere essas informações com base nos acordes usando regras predefinidas.
+### 3. 🧩 Data Enrichment with Inference
 
-### 4. 🔍 Montagem da Consulta no MongoDB
+For perfumes that lack usage information (weather, time of day, season), the system infers this data based on accords using predefined rules.
 
-A consulta aplica as seguintes regras:
+### 4. 🔍 Building the MongoDB Query
 
-- ❌ Exclui:
-  - Perfumes que o usuário já possui
-  - Perfumes que o usuário não gosta
-  - Perfumes com notas ou acordes que o usuário não gosta
+The query applies the following rules:
+
+- ❌ Excludes:
+  - Perfumes the user already owns
+  - Perfumes the user dislikes
+  - Perfumes with notes or accords the user dislikes
+
+- ✅ Includes:
+  - Perfumes compatible with the specified weather, time of day, and season
+  - Perfumes with preferred notes/accords
+  - Perfumes similar to those the user likes, based on the most common notes and accords among them
 
 
-- ✅ Inclui:
-  - Perfumes compatíveis com o clima, turno e estação informados
-  - Perfumes com notas/acordes preferidos
-  - Perfumes similares aos que o usuário gosta, analisando os acordes e notas mais comuns entre eles
+### 5. 🎯 Result Prioritization
+
+Perfumes are ranked based on:
+- Compatibility with the usage context (e.g., exclusively nighttime if "night" was requested)
+- Number of shared characteristics with perfumes the user likes
+- Presence of desired notes and accords
 
 
-### 5. 🎯 Priorização de Resultados
-
-Os perfumes são ordenados com base em:
-- Compatibilidade com o contexto de uso (ex: exclusivamente noturno se "night" foi solicitado)
-- Quantidade de características em comum com os perfumes que o usuário gosta
-- Presença de notas e acordes desejados
-
-### 6. 📤 Retorno da Recomendação
-- A API retorna até 10 perfumes recomendados
-- Exemplo de retorno:
+### 6. 📤 Returning the Recommendation
+- The API returns up to 10 recommended perfumes
+- Example response:
 
 ```json
 {
@@ -92,34 +93,33 @@ Os perfumes são ordenados com base em:
 
 ---
 
-## 🛠️ Passo a Passo para Rodar o Projeto Localmente
+## 🛠️ Step-by-Step Guide to Run the Project Locally
 
-### 1. 📦 Pré-requisitos
+### 1. 📦 Prerequisites
 
-Certifique-se de que você tem instalado:
-
+Make sure you have the following installed:
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 - Python 3.10+ com `pip`
 
 
-### 2. 🐳 Subindo os Serviços com Docker Compose
+### 2. 🐳 Bringing Up Services with Docker Compose
 
-1. Clone o repositório do projeto:
+1. Clone the project repository:
 
 ```bash
-  git clone https://github.com/seu-usuario/sua-api-perfumes.git
-  cd sua-api-perfumes
+  git clone https://github.com/rodrigogmartins/perfume-recommendations.git
+  cd perfume-recommendations
 ```
 
-2. Suba o MongoDB
+2. Start MongoDB:
 
 ```bash
   docker-compose up -d
 ```
 
 
-### 3. 📚 Criar Ambiente Virtual e Instalar Dependências
+### 3. 📚 Create a Virtual Environment and Install Dependencies
 
 ```bash
   python -m venv venv
@@ -128,41 +128,41 @@ Certifique-se de que você tem instalado:
 ```
 
 
-### 4. 📥 Popular o Banco de Dados com Perfumes
+### 4. 📥 Populate the Database with Perfumes
 
-Execute o script para salvar os dados de perfumes do dataset no MongoDB:
+Run the script to save perfume data from the dataset into MongoDB:
 
 ```bash
   python src/data/fill_perfume_dataset.py
 ```
 
-Esse script:
-- Lê o arquivo .csv com perfumes
-- Faz inferência de uso (clima, estação, turno)
-- Insere os perfumes na coleção perfumes no MongoDB
+This script:
+- Reads the .csv file with perfumes
+- Makes usage inference (weather, season, time of day)
+- Inserts perfumes into the perfumes collection in MongoDB
 
 
-### 5. 🚀 Rodar a API
+### 5. 🚀 Run the API
 
-Com tudo instalado, rode a aplicação localmente:
+With everything installed, run the application locally:
 
 ```bash
   python server.py
 ```
 
-A API estará disponível em: http://localhost:8000
+The API will be available at: http://localhost:8000
 
 
-### 6. 📘 Acessar a Documentação
+### 6. 📘 Access the Documentation
 
-Acesse a documentação Swagger da API:
+Access the Swagger API documentation:
 
 ```bash
   http://localhost:8000/docs
 ```
 
 
-### 7. 🧪 Testar as Requisições
+### 7. 🧪 Test the Requests
 
 ```bash
   curl --request POST \
@@ -170,8 +170,8 @@ Acesse a documentação Swagger da API:
     --header 'Content-Type: application/json' \
     --header 'User-Agent: insomnia/11.1.0' \
     --data '{
-      "ownedPerfumes": ["d700cad2-015c-46cf-82d9-092a015ac044", "5c5cc127-c81d-4fbf-8ce3-358f88767a1e", "d700cad2-015c-46cf-82d9-092a015ac044"],
-      "likedPerfumes": ["d700cad2-015c-46cf-82d9-092a015ac044", "5c5cc127-c81d-4fbf-8ce3-358f88767a1e"],
+      "ownedPerfumes": ["1", "2", "3"],
+      "likedPerfumes": ["1", "4"],
       "notLikedPerfumes": [],
       "notLikedNotes": ["pine", "oud"],
       "notLikedAccords": ["balsamic", "powdery"],
@@ -181,9 +181,9 @@ Acesse a documentação Swagger da API:
 ```
 
 
-### 8. 🧹 Encerrar os Serviços
+### 8. 🧹 Stop the Services
 
-Para parar os serviços do Docker:
+To stop the Docker services:
 
 ```bash
   docker-compose down
@@ -191,17 +191,16 @@ Para parar os serviços do Docker:
 
 ---
 
-## 📊 Dados Utilizados
+## 📊 Data Used
 
-Este projeto utiliza dados coletados a partir da comunidade de usuários do Fragrantica, organizados no dataset "Fragrantica.com Fragrance Dataset" disponível em [https://www.kaggle.com/datasets/olgagmiufana1/fragrantica-com-fragrance-dataset](https://www.kaggle.com/datasets/olgagmiufana1/fragrantica-com-fragrance-dataset).
+This project uses data collected from the Fragrantica user community, organized in the "Fragrantica.com Fragrance Dataset" available at [https://www.kaggle.com/datasets/olgagmiufana1/fragrantica-com-fragrance-dataset](https://www.kaggle.com/datasets/olgagmiufana1/fragrantica-com-fragrance-dataset).
 
-**Créditos:**  
-Dataset organizado por [Olga G](https://www.kaggle.com/olgagmiufana1)  
-Licença: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+**Credits:**  
+Dataset organized by [Olga G](https://www.kaggle.com/olgagmiufana1)  
+License: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-Modificações foram realizadas para inferência de clima, estação e turno de uso dos perfumes.  
-Distribuição e uso estão em conformidade com a licença, sem fins comerciais.
-
+Modifications were made for inferring weather, season, and time of day for perfume usage.  
+Distribution and usage are in compliance with the license, for non-commercial purposes.
 
 
 [//]: # ()
