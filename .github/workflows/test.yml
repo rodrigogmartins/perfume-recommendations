@@ -1,12 +1,10 @@
-name: Run Tests and Check Coverage
+name: Run Tests and Coverage Check
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   test:
@@ -21,13 +19,17 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install pip and dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
+          python -m ensurepip --upgrade
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
+
+      - name: Verify pytest is available
+        run: |
+          which pytest
+          pytest --version
 
       - name: Run tests and check coverage
         run: |
