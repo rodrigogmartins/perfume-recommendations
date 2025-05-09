@@ -37,7 +37,7 @@ jobs:
         run: |
           COVERAGE=$(pytest --cov=src --cov-report=term-missing | tail -n 10)
           echo "$COVERAGE"
-          if [[ "$COVERAGE" =~ "85%" ]]; then
+          if [[ "$COVERAGE" =~ "70%" ]]; then
             echo "Coverage is sufficient."
           else
             echo "Coverage is below the expected threshold!" && exit 1

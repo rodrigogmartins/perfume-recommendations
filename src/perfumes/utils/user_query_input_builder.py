@@ -1,4 +1,4 @@
-from src.controller.user_input_query import UserInputQuery
+from src.perfumes.dto.user_input_query import UserInputQuery
 from src.cross.mongo_client import get_mongo_collection
 from src.perfumes.utils.get_effective_liked_accords import get_effective_liked_accords
 from src.perfumes.utils.get_effective_liked_notes import get_effective_liked_notes

@@ -1,10 +1,9 @@
 from fastapi import FastAPI, HTTPException
 
-from src.controller.user_input_query import UserInputQuery
-from src.controller.user_query_input_builder import user_input_query_builder
+from src.perfumes.dto.user_input_query import UserInputQuery
 from src.perfumes.get_perfumes import get_sorted_perfumes
+from src.perfumes.utils.user_query_input_builder import user_input_query_builder
 
-import math
 app = FastAPI()
 
 @app.post("/api/perfumes/recommendations")
