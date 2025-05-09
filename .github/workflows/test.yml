@@ -1,0 +1,44 @@
+name: Run Tests and Check Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests with coverage
+        run: |
+          source venv/bin/activate
+          pytest --maxfail=1 --disable-warnings -q --cov=src --cov-report=xml
+
+      - name: Check coverage
+        run: |
+          COVERAGE=$(pytest --cov=src --cov-report=term-missing | tail -n 10)
+          echo "$COVERAGE"
+          if [[ "$COVERAGE" =~ "85%" ]]; then
+            echo "Coverage is sufficient."
+          else
+            echo "Coverage is below the expected threshold!" && exit 1
+          fi
