@@ -20,6 +20,11 @@ collection.create_index([("day_shifts", ASCENDING)])
 collection.create_index([("climates", ASCENDING)])
 collection.create_index([("seasons", ASCENDING)])
 collection.create_index([("rating", DESCENDING)])
+collection.create_index([
+    ("name", "text"),
+    ("brand", "text"),
+    ("description", "text")
+])
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
