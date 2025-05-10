@@ -141,6 +141,13 @@ This script:
 - Makes usage inference (weather, season, time of day)
 - Inserts perfumes into the perfumes collection in MongoDB
 
+#### 4.1. Query perfumes from Database
+
+```bash
+  docker exec -it mongodb mongosh -u root -p example
+  use perfume_db
+  db.perfumes.find().limit(5).pretty()
+```
 
 ### 5. 🚀 Run the API
 
@@ -201,11 +208,5 @@ License: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Modifications were made for inferring weather, season, and time of day for perfume usage.  
 Distribution and usage are in compliance with the license, for non-commercial purposes.
-
-
-[//]: # ()
-[//]: # (docker exec -it mongodb mongosh -u root -p example)
-[//]: # (use perfume_db)
-[//]: # (db.perfumes.find&#40;&#41;.limit&#40;5&#41;.pretty&#40;&#41;)
 
 

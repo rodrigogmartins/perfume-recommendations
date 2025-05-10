@@ -141,6 +141,13 @@ Esse script:
 - Faz inferência de uso (clima, estação, turno)
 - Insere os perfumes na coleção perfumes no MongoDB
 
+#### 4.1. Consultar perfumes no Banco de Dados
+
+```bash
+  docker exec -it mongodb mongosh -u root -p example
+  use perfume_db
+  db.perfumes.find().limit(5).pretty()
+```
 
 ### 5. 🚀 Rodar a API
 
@@ -201,12 +208,5 @@ Licença: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Modificações foram realizadas para inferência de clima, estação e turno de uso dos perfumes.  
 Distribuição e uso estão em conformidade com a licença, sem fins comerciais.
-
-
-
-[//]: # ()
-[//]: # (docker exec -it mongodb mongosh -u root -p example)
-[//]: # (use perfume_db)
-[//]: # (db.perfumes.find&#40;&#41;.limit&#40;5&#41;.pretty&#40;&#41;)
 
 
