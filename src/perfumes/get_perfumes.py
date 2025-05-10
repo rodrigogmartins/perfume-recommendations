@@ -1,6 +1,8 @@
 from src.cross.mongo_client import get_mongo_collection
-from src.perfumes.utils.query_builder import query_builder
+from src.perfumes.calculate_affinity_score import calculate_affinity_score
 from src.perfumes.prioritizer.perfumes_prioritizer import perfumes_prioritizer
+from src.perfumes.utils.query_builder import query_builder
+
 
 def get_sorted_perfumes(user_input_query):
     collection = get_mongo_collection("perfumes")
@@ -21,9 +23,13 @@ def get_sorted_perfumes(user_input_query):
             "url": 1,
         }
     )
-
-    return sorted(
+    recommended_perfumes = sorted(
         perfumes,
         key=lambda perfume: perfumes_prioritizer(perfume, user_input_query),
         reverse=True
     )[:10]
+
+    for recommended_perfume in recommended_perfumes:
+        recommended_perfume["matchProbability"] = calculate_affinity_score(recommended_perfume, user_input_query)
+
+    return recommended_perfumes
