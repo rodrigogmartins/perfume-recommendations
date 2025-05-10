@@ -49,33 +49,33 @@ For perfumes that lack usage information (weather, time of day, season), the sys
 The query applies the following rules:
 
 - ❌ Excludes:
-  - Perfumes the user already owns
-  - Perfumes the user dislikes
-  - Perfumes with notes or accords the user dislikes
+  - Perfumes the user already owns.
+  - Perfumes the user dislikes.
+  - Perfumes with notes or accords the user dislikes.
 
 - ✅ Includes:
-  - Perfumes compatible with the specified weather, time of day, and season
-  - Perfumes with preferred notes/accords
-  - Perfumes similar to those the user likes, based on the most common notes and accords among them
+  - Perfumes compatible with the specified weather, time of day, and season.
+  - Perfumes with preferred notes/accords.
+  - Perfumes similar to those the user likes, based on the most common notes and accords among them.
 
 
 ### 5. 🎯 Result Prioritization
 
 Perfumes are ranked based on:
-- Compatibility with the usage context (e.g., exclusively nighttime if "night" was requested)
-- Number of shared characteristics with perfumes the user likes
-- Presence of desired notes and accords
+- Compatibility with the usage context (e.g., exclusively nighttime if "night" was requested).
+- Number of shared characteristics with perfumes the user likes.
+- Presence of desired notes and accords.
 
 
 ### 6. 📤 Returning the Recommendation
-- The API returns up to 10 recommended perfumes
+- The API returns up to 10 recommended perfumes.
 - Example response:
 
 ```json
 {
   "items": [
     {
-      "_id": "1e3b905d-06cf-4a28-9b69-87a713b5142e",
+      "_id": "23569",
       "name": "shisha-lounge",
       "brand": "ricardo-ramos-perfumes-de-autor",
       "top_notes": [ "anise", "red fruits", "hazelnut", "neroli" ],
@@ -85,7 +85,30 @@ Perfumes are ranked based on:
       "day_shifts": [ "night" ],
       "climates": [ "cold" ],
       "seasons": [ "winter" ],
-      "url": "https://www.fragrantica.com/perfume/ricardo-ramos-perfumes-de-autor/shisha-lounge-58575.html"
+      "url": "https://www.fragrantica.com/perfume/ricardo-ramos-perfumes-de-autor/shisha-lounge-58575.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.58575.jpg",
+      "rating": 4.46,
+      "match_probability": 0.53
+    }
+  ]
+}
+```
+
+### 7. 📤 Perfume Search Response
+- The API returns up to 10 perfumes found based on the provided data.
+- Example response:
+
+```json
+{
+  "items": [
+    {
+      "_id": "4467",
+      "name": "Invictus Paco Rabanne",
+      "brand": "paco-rabanne",
+      "url": "https://www.fragrantica.com/perfume/paco-rabanne/invictus-18471.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.18471.jpg",
+      "rating": 3.73,
+      "score": 0.6666666666666666
     }
   ]
 }
@@ -139,6 +162,7 @@ Run the script to save perfume data from the dataset into MongoDB:
 This script:
 - Reads the .csv file with perfumes
 - Makes usage inference (weather, season, time of day)
+- Builds the perfume image URL.
 - Inserts perfumes into the perfumes collection in MongoDB
 
 #### 4.1. Query perfumes from Database
@@ -175,7 +199,6 @@ Access the Swagger API documentation:
   curl --request POST \
     --url http://localhost:8000/api/perfumes/recommendations \
     --header 'Content-Type: application/json' \
-    --header 'User-Agent: insomnia/11.1.0' \
     --scripts '{
       "ownedPerfumes": ["1", "2", "3"],
       "likedPerfumes": ["1", "4"],
@@ -187,6 +210,10 @@ Access the Swagger API documentation:
     }'
 ```
 
+```bash
+  curl --request GET \
+    --url 'http://localhost:8000/api/perfumes/search?query=invictus'
+```
 
 ### 8. 🧹 Stop the Services
 
