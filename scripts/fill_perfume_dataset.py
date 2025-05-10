@@ -1,10 +1,12 @@
+import os
+
 import pandas as pd
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-from src.data.inferences.perfume_climates_usage_recommendations_inference import get_climates_recommendations_inference
-from src.data.inferences.perfume_day_shifts_usage_recommendations_inference import \
+from scripts.inferences.perfume_climates_usage_recommendations_inference import get_climates_recommendations_inference
+from scripts.inferences.perfume_day_shifts_usage_recommendations_inference import \
     get_day_shifts_recommendations_inference
-from src.data.inferences.perfume_seasons_usage_recommendations_inference import get_seasons_recommendations_inference
+from scripts.inferences.perfume_seasons_usage_recommendations_inference import get_seasons_recommendations_inference
 
 client = MongoClient("mongodb://root:example@localhost:27017/")
 db = client["perfume_db"]
@@ -19,8 +21,10 @@ collection.create_index([("climates", ASCENDING)])
 collection.create_index([("seasons", ASCENDING)])
 collection.create_index([("rating", DESCENDING)])
 
-perfumes_data_cleaned = pd.read_csv("datasets/fra_cleaned.csv", sep=";", encoding="latin1")
-perfumes_data = pd.read_csv("datasets/fra_perfumes.csv", sep=",", encoding="latin1").to_dict(orient="records")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+perfumes_data_cleaned = pd.read_csv(os.path.join(SCRIPT_DIR, 'datasets', 'fra_cleaned.csv'), sep=";", encoding="latin1")
+perfumes_data = pd.read_csv(os.path.join(SCRIPT_DIR, 'datasets', 'fra_perfumes.csv'), sep=",", encoding="latin1").to_dict(orient="records")
 
 perfumes = []
 url_index = {
