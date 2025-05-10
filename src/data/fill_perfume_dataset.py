@@ -33,6 +33,13 @@ def get_accords(row_param):
     accords_list = [row_param[f"mainaccord{i}"] for i in range(1, 6) if pd.notna(row_param[f"mainaccord{i}"])]
     return [a.lower().strip() for a in accords_list]
 
+def generate_image_url(product_url: str) -> str:
+    try:
+        perfume_id = product_url.rstrip('/').split('-')[-1].replace('.html', '')
+        return f"https://fimgs.net/mdimg/perfume/375x500.{perfume_id}.jpg"
+    except Exception as e:
+        raise ValueError(f"Erro ao gerar imagem a partir da URL '{product_url}': {e}")
+
 for index, row in perfumes_data_cleaned.iterrows():
     try:
         item = url_index.get(row["url"].strip().lower())
@@ -57,6 +64,7 @@ for index, row in perfumes_data_cleaned.iterrows():
             "climates": get_climates_recommendations_inference(accords),
             "seasons": get_seasons_recommendations_inference(accords),
             "url": row["url"].strip(),
+            "image_url": generate_image_url(row["url"].strip()),
             "rating": item["Rating Value"]
         }
         perfumes.append(perfume)
