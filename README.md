@@ -133,7 +133,7 @@ Make sure you have the following installed:
 Run the script to save perfume data from the dataset into MongoDB:
 
 ```bash
-  python src/data/fill_perfume_dataset.py
+  python -m scripts.fill_perfume_dataset
 ```
 
 This script:
@@ -176,7 +176,7 @@ Access the Swagger API documentation:
     --url http://localhost:8000/api/perfumes/recommendations \
     --header 'Content-Type: application/json' \
     --header 'User-Agent: insomnia/11.1.0' \
-    --data '{
+    --scripts '{
       "ownedPerfumes": ["1", "2", "3"],
       "likedPerfumes": ["1", "4"],
       "notLikedPerfumes": [],
