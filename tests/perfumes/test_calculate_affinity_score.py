@@ -22,7 +22,7 @@ def test_perfect_match(base_user_preferences):
 
 def test_partial_match(base_user_preferences):
     perfume = {
-        "all_notes": ["vanilla", "rose"],
+        "all_notes": ["vanilla", "oud"],
         "accords": ["sweet", "woody"]
     }
     score = calculate_affinity_score(perfume, base_user_preferences)
