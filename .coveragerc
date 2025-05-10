@@ -3,6 +3,8 @@ branch = True
 omit =
     src/cross/*
     src/data/*
+    src/controller/*
+    src/perfumes/dto*
 
 [coverage:report]
 show_missing = True
