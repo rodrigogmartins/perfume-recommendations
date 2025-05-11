@@ -93,10 +93,59 @@ Os perfumes são ordenados com base em:
 }
 ```
 
-### 7. 📤 Retorno da Busca de Pefumes
-- A API retorna até 10 perfumes encontrados com o os dados fornecidos.
-- Exemplo de retorno:
+---
 
+## 📡 API Endpoints
+
+### 🔍 GET ```/api/perfumes```
+
+Lista perfumes em ordem alfabética com suporte a paginação.
+
+#### Parâmetros de query:
+- ```limit``` (opcional, padrão: 20) — número máximo de perfumes retornados.
+- ```offset``` (opcional, padrão: 0) — número de perfumes a pular (útil para paginação).
+
+#### Exemplo de requisição:
+```bash
+  curl --request GET \
+    --url 'http://localhost:8000/api/perfumes?limit=20&offset=0'
+```
+
+#### Exemplo de resposta:
+```json
+  [
+    {
+      "_id": "646",
+      "name": "Acqua di Gio",
+      "brand": "Giorgio Armani",
+      "url": "https://www.fragrantica.com/perfume/Giorgio-Armani/Acqua-di-Gio-646.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.646.jpg"
+    },
+    {
+      "_id": "10379",
+      "name": "Aventus",
+      "brand": "Creed",
+      "url": "https://www.fragrantica.com/perfume/Creed/Aventus-10379.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.10379.jpg"
+    }
+  ]
+```
+
+### 🔎 GET ```/api/search```
+
+Permite realizar buscas por perfumes usando full-text search.
+
+#### Parâmetros de query:
+- ```query``` **(obrigatório)** — termo de busca.
+- ```limit``` **(opcional, padrão: 10)**.
+
+#### Exemplo de requisição:
+```bash
+  curl --request GET \
+    --url 'http://localhost:8000/api/perfumes/search?query=invictus'
+```
+
+#### Exemplo de resposta:
 ```json
 {
   "items": [
@@ -112,6 +161,62 @@ Os perfumes são ordenados com base em:
   ]
 }
 ```
+
+### 🎯 POST ```/api/perfumes/recommendations```
+
+Gera uma lista personalizada de perfumes com base nas preferências do usuário e/ou nos dados armazenados previamente.
+
+#### Body (JSON):
+Todos os campos são opcionais.
+
+```json
+{
+  "ownedPerfumes": ["1", "2", "3"],
+  "likedPerfumes": ["3", "4"],
+  "notLikedPerfumes": [],
+  "notLikedNotes": ["pine", "oud"],
+  "notLikedAccords": ["balsamic", "powdery"],
+  "dayShifts": ["night"],
+  "climates": ["cold"]
+}
+```
+
+#### Exemplo de requisição:
+```bash
+  curl --request POST \
+    --url http://localhost:8000/api/perfumes/recommendations \
+    --header 'Content-Type: application/json' \
+    --scripts '{
+      "ownedPerfumes": ["1", "2", "3"],
+      "likedPerfumes": ["1", "4"],
+      "notLikedPerfumes": [],
+      "notLikedNotes": ["pine", "oud"],
+      "notLikedAccords": ["balsamic", "powdery"],
+      "dayShifts": ["night"],
+      "climates": ["cold"]
+    }'
+```
+
+#### Exemplo de resposta:
+```json
+{
+  "items": [
+    {
+      "_id": "4467",
+      "name": "Invictus Paco Rabanne",
+      "brand": "paco-rabanne",
+      "url": "https://www.fragrantica.com/perfume/paco-rabanne/invictus-18471.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.18471.jpg",
+      "rating": 3.73,
+      "score": 0.6666666666666666
+    }
+  ]
+}
+```
+
+#### Notas:
+- O campo ```score``` representa a probabilidade estimada do usuário gostar do perfume.
+- Perfumes que o usuário já possui, não gosta ou que contenham notas/acordes indesejados são automaticamente filtrados.
 
 ---
 
@@ -192,30 +297,7 @@ Acesse a documentação Swagger da API:
   http://localhost:8000/docs
 ```
 
-
-### 7. 🧪 Testar as Requisições
-
-```bash
-  curl --request POST \
-    --url http://localhost:8000/api/perfumes/recommendations \
-    --header 'Content-Type: application/json' \
-    --scripts '{
-      "ownedPerfumes": ["1", "2", "3"],
-      "likedPerfumes": ["1", "4"],
-      "notLikedPerfumes": [],
-      "notLikedNotes": ["pine", "oud"],
-      "notLikedAccords": ["balsamic", "powdery"],
-      "dayShifts": ["night"],
-      "climates": ["cold"]
-    }'
-```
-
-```bash
-  curl --request GET \
-    --url 'http://localhost:8000/api/perfumes/search?query=invictus'
-```
-
-### 8. 🧹 Encerrar os Serviços
+### 7. 🧹 Encerrar os Serviços
 
 Para parar os serviços do Docker:
 
