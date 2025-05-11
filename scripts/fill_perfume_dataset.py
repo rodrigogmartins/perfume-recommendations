@@ -42,7 +42,10 @@ def get_accords(row_param):
     accords_list = [row_param[f"mainaccord{i}"] for i in range(1, 6) if pd.notna(row_param[f"mainaccord{i}"])]
     return [a.lower().strip() for a in accords_list]
 
-def generate_image_url(product_url: str) -> str:
+def format_perfume_name(slug):
+    return ' '.join(word.capitalize() for word in slug.split('-'))
+
+def generate_image_url(product_url):
     try:
         perfume_id = product_url.rstrip('/').split('-')[-1].replace('.html', '')
         return f"https://fimgs.net/mdimg/perfume/375x500.{perfume_id}.jpg"
@@ -60,7 +63,7 @@ for index, row in perfumes_data_cleaned.iterrows():
         perfume = {
             "_id": str(index),
             "name": item["Name"].replace(item["Gender"], ""),
-            "brand": row["Brand"].strip(),
+            "brand": format_perfume_name(row["Brand"].strip()),
             "country": row["Country"].strip(),
             "gender": row["Gender"].strip(),
             "year": row["Year"],
