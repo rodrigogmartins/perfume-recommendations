@@ -29,7 +29,7 @@ collection.create_index([
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 perfumes_data_cleaned = pd.read_csv(os.path.join(SCRIPT_DIR, 'datasets', 'fra_cleaned.csv'), sep=";", encoding="latin1")
-perfumes_data = pd.read_csv(os.path.join(SCRIPT_DIR, 'datasets', 'fra_perfumes.csv'), sep=",", encoding="latin1").to_dict(orient="records")
+perfumes_data = pd.read_csv(os.path.join(SCRIPT_DIR, 'datasets', 'fra_perfumes.csv'), sep=",", encoding="utf-8").to_dict(orient="records")
 
 perfumes = []
 url_index = {
