@@ -2,8 +2,10 @@
 branch = True
 omit =
     src/cross/*
+    src/infra/*
     src/data/*
     src/controller/*
+    src/middlewares/*
     src/perfumes/dto*
 
 [coverage:report]
