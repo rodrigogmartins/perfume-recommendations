@@ -6,7 +6,7 @@ from src.perfumes.prioritizer.perfumes_prioritizer import perfumes_prioritizer
 from src.perfumes.utils.query_builder import query_builder
 
 
-def get_sorted_perfumes(user_input_query):
+def get_sorted_perfumes(user_input_query, limit):
     collection = get_mongo_collection("perfumes")
     query = query_builder(user_input_query)
     perfumes = (
@@ -34,7 +34,7 @@ def get_sorted_perfumes(user_input_query):
         perfumes,
         key=lambda perfume: perfumes_prioritizer(perfume, user_input_query),
         reverse=True
-    )[:10]
+    )[:limit]
 
     for recommended_perfume in recommended_perfumes:
         recommended_perfume["match_probability"] = calculate_affinity_score(recommended_perfume, user_input_query)

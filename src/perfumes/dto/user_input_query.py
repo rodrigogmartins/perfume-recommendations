@@ -1,17 +1,17 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 # noinspection PyDataclass
 class UserInputQuery(BaseModel):
-    ownedPerfumes: List[str] = []
-    likedPerfumes: List[str] = []
-    notLikedPerfumes: List[str] = []
-    likedNotes: List[str] = []
-    notLikedNotes: List[str] = []
-    likedAccords: List[str] = []
-    notLikedAccords: List[str] = []
-    dayShifts: List[str] = []
-    climates: List[str] = []
-    seasons: List[str] = []
+    ownedPerfumes: Optional[List[str]] = []
+    likedPerfumes: Optional[List[str]] = []
+    notLikedPerfumes: Optional[List[str]] = []
+    likedNotes: Optional[List[str]] = []
+    notLikedNotes: Optional[List[str]] = []
+    likedAccords: Optional[List[str]] = []
+    notLikedAccords: Optional[List[str]] = []
+    dayShifts: Optional[List[str]] = []
+    climates: Optional[List[str]] = []
+    seasons: Optional[List[str]] = []

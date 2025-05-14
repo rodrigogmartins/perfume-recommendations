@@ -97,52 +97,20 @@ Os perfumes são ordenados com base em:
 
 ## 📡 API Endpoints
 
-### 🔍 GET ```/api/perfumes```
+### 🔎 GET ```/api/perfumes/search```
 
-Lista perfumes em ordem alfabética com suporte a paginação.
+Se uma ```query``` for passada, então é realizada uma busca por perfumes usando full-text search.
+Se não, lista perfumes em ordem alfabética com suporte a paginação.
 
 #### Parâmetros de query:
-- ```limit``` (opcional, padrão: 20) — número máximo de perfumes retornados.
+- ```query``` **(opcional)** — termo de busca.
+- ```limit``` **(opcional, padrão: 10)**.
 - ```offset``` (opcional, padrão: 0) — número de perfumes a pular (útil para paginação).
 
 #### Exemplo de requisição:
 ```bash
   curl --request GET \
-    --url 'http://localhost:8000/api/perfumes?limit=20&offset=0'
-```
-
-#### Exemplo de resposta:
-```json
-  [
-    {
-      "_id": "646",
-      "name": "Acqua di Gio",
-      "brand": "Giorgio Armani",
-      "url": "https://www.fragrantica.com/perfume/Giorgio-Armani/Acqua-di-Gio-646.html",
-      "image_url": "https://fimgs.net/mdimg/perfume/375x500.646.jpg"
-    },
-    {
-      "_id": "10379",
-      "name": "Aventus",
-      "brand": "Creed",
-      "url": "https://www.fragrantica.com/perfume/Creed/Aventus-10379.html",
-      "image_url": "https://fimgs.net/mdimg/perfume/375x500.10379.jpg"
-    }
-  ]
-```
-
-### 🔎 GET ```/api/search```
-
-Permite realizar buscas por perfumes usando full-text search.
-
-#### Parâmetros de query:
-- ```query``` **(obrigatório)** — termo de busca.
-- ```limit``` **(opcional, padrão: 10)**.
-
-#### Exemplo de requisição:
-```bash
-  curl --request GET \
-    --url 'http://localhost:8000/api/perfumes/search?query=invictus'
+    --url 'http://localhost:8000/api/perfumes/search?query=invictus&limit=20&offset=0'
 ```
 
 #### Exemplo de resposta:
@@ -150,13 +118,12 @@ Permite realizar buscas por perfumes usando full-text search.
 {
   "items": [
     {
-      "_id": "4467",
-      "name": "Invictus Paco Rabanne",
-      "brand": "paco-rabanne",
-      "url": "https://www.fragrantica.com/perfume/paco-rabanne/invictus-18471.html",
-      "image_url": "https://fimgs.net/mdimg/perfume/375x500.18471.jpg",
-      "rating": 3.73,
-      "score": 0.6666666666666666
+      "id": "646",
+      "name": "Acqua di Gio",
+      "brand": "Giorgio Armani",
+      "url": "https://www.fragrantica.com/perfume/Giorgio-Armani/Acqua-di-Gio-646.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.646.jpg",
+      "rating": 3.73
     }
   ]
 }
@@ -165,6 +132,9 @@ Permite realizar buscas por perfumes usando full-text search.
 ### 🎯 POST ```/api/perfumes/recommendations```
 
 Gera uma lista personalizada de perfumes com base nas preferências do usuário e/ou nos dados armazenados previamente.
+
+#### Parâmetros de query:
+- ```limit``` **(opcional, max: 10)**.
 
 #### Body (JSON):
 Todos os campos são opcionais.
@@ -184,7 +154,7 @@ Todos os campos são opcionais.
 #### Exemplo de requisição:
 ```bash
   curl --request POST \
-    --url http://localhost:8000/api/perfumes/recommendations \
+    --url http://localhost:8000/api/perfumes/recommendations?limit=1 \
     --header 'Content-Type: application/json' \
     --scripts '{
       "ownedPerfumes": ["1", "2", "3"],
@@ -202,13 +172,20 @@ Todos os campos são opcionais.
 {
   "items": [
     {
-      "_id": "4467",
-      "name": "Invictus Paco Rabanne",
-      "brand": "paco-rabanne",
-      "url": "https://www.fragrantica.com/perfume/paco-rabanne/invictus-18471.html",
-      "image_url": "https://fimgs.net/mdimg/perfume/375x500.18471.jpg",
-      "rating": 3.73,
-      "score": 0.6666666666666666
+      "name": "Hero Boadicea the Victorious",
+      "brand": "Boadicea The Victorious",
+      "top_notes": [ "hazelnut", "saffron", "coffee", "rhubarb", "ylang-ylang" ],
+      "mid_notes": [ "tobacco", "patchouli", "tonka bean", "sandalwood", "rose" ],
+      "base_notes": [ "guaiac wood", "indian oud", "fir resin", "siam benzoin", "cypriol oil or nagarmotha", "rock rose" ],
+      "accords": [ "woody", "warm spicy", "sweet", "tobacco", "nutty" ],
+      "day_shifts": [ "night" ],
+      "climates": [ "cold" ],
+      "seasons": [ "winter", "fall" ],
+      "url": "https://www.fragrantica.com/perfume/boadicea-the-victorious/hero-37792.html",
+      "image_url": "https://fimgs.net/mdimg/perfume/375x500.37792.jpg",
+      "rating": 4.49,
+      "match_probability": 0.53,
+      "id": "23569"
     }
   ]
 }

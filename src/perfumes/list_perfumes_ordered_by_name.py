@@ -12,7 +12,8 @@ def list_perfumes_ordered_by_name(limit = 20, offset = 0):
                 "name": 1,
                 "brand": 1,
                 "url": 1,
-                "image_url": 1
+                "image_url": 1,
+                "rating": 1
             }
         )
         .sort("name", ASCENDING)
