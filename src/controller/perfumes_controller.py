@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Query, APIRouter
 
-from src.controller.format_perfume_id import format_perfumes_ids
+from src.utils.format_perfume_id import format_perfumes_ids
 from src.perfumes.dto.user_input_query import UserInputQuery
 from src.perfumes.get_perfumes_recommendations import get_sorted_perfumes
 from src.perfumes.list_perfumes_ordered_by_name import list_perfumes_ordered_by_name
