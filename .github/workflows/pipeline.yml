@@ -5,10 +5,9 @@ on:
     branches: [main]
 
 jobs:
-  test-and-build:
-    name: Run Tests, Coverage Check and Publish Image
+  test-and-coverage:
+    name: Run Tests and Coverage Check
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,6 +35,12 @@ jobs:
             echo "✅ Coverage OK: $COVERAGE_PERCENT%"
           fi
 
+  build-and-push-api:
+    name: Build & Push API Docker Image
+    runs-on: ubuntu-latest
+    needs: test-and-coverage
+
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -59,6 +64,22 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+  build-and-push-scritps:
+    name: Build & Push Scripts Docker Image
+    runs-on: ubuntu-latest
+    needs: test-and-coverage
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
       - name: Build and push fill-database-scripts image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
