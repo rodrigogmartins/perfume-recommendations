@@ -21,7 +21,7 @@ def search_perfumes(
         logger.info(f"Search - Querying perfumes with filters. Query: {query}, Limit: {limit}, Offset: {offset}")
         perfumes = list_perfumes_ordered_by_name(limit, offset) \
             if (query == "") or (query is None) \
-            else search_perfumes_by_text(query, limit)
+            else search_perfumes_by_text(query, limit, offset)
 
         result = { "items": format_perfumes_ids(perfumes) }
         logger.info(f"Search - Search result: {result}")

@@ -1,6 +1,6 @@
 from src.cross.mongo_client import get_mongo_collection
 
-def search_perfumes_by_text(query, limit = 10):
+def search_perfumes_by_text(query, limit = 10, offset = 0):
     collection = get_mongo_collection("perfumes")
     return list(
         collection.find(
@@ -14,6 +14,10 @@ def search_perfumes_by_text(query, limit = 10):
                 "rating": 1
             }
         )
-        .sort([("score", {"$meta": "textScore"})])
+        .sort([
+            ("score", {"$meta": "textScore"}),
+            ("_id", 1)
+        ])
+        .skip(offset)
         .limit(limit)
     )
