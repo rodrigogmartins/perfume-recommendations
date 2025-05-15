@@ -6,7 +6,7 @@ on:
 
 jobs:
   test-and-build:
-    name: Run Tests and Coverage Check
+    name: Run Tests, Coverage Check and Publish Image
     runs-on: ubuntu-latest
 
     steps:
