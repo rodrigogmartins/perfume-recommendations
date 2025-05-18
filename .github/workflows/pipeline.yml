@@ -75,12 +75,12 @@ jobs:
       - name: Build and push recommendations-api image to ECR
 #        if: steps.changes.outputs.changed == 'true'
         env:
-          ECR_REGISTRY_RECOMMENDATIONS_API: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY_RECOMMENDATIONS_API: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
         run: |
-          docker build -t $ECR_REPOSITORY_RECOMMENDATIONS_API -f Dockerfile.api .
-          docker tag $ECR_REPOSITORY_RECOMMENDATIONS_API:latest $ECR_REGISTRY_RECOMMENDATIONS_API/$ECR_REPOSITORY_RECOMMENDATIONS_API:latest
-          docker push $ECR_REGISTRY_RECOMMENDATIONS_API/$ECR_REPOSITORY_RECOMMENDATIONS_API:latest
+          docker build -t $ECR_REPOSITORY:latest -f Dockerfile.api .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
   build-and-push-scritps:
     name: Build & Push Scripts Docker Image
@@ -125,6 +125,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FILL_DATABASE_SCRIPTS }}
         run: |
-          docker build -t $ECR_REPOSITORY -f Dockerfile.scripts .
+          docker build -t $ECR_REPOSITORY:latest -f Dockerfile.scripts .
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
