@@ -61,7 +61,7 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -70,10 +70,10 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
 
       - name: Build and push recommendations-api image to ECR
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
