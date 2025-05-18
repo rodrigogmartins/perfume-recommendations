@@ -3,7 +3,11 @@ FROM python:3.8-slim
 WORKDIR /app
 
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /app/certs && \
+    curl -o /app/certs/rds-combined-ca-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 
 COPY scripts ./scripts
 
