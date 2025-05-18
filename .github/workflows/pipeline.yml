@@ -75,12 +75,12 @@ jobs:
       - name: Build and push recommendations-api image to ECR
 #        if: steps.changes.outputs.changed == 'true'
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
+          ECR_REGISTRY_RECOMMENDATIONS_API: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_RECOMMENDATIONS_API: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
         run: |
-          docker build -t $ECR_REPOSITORY -f Dockerfile.api .
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build -t ECR_REPOSITORY_RECOMMENDATIONS_API -f Dockerfile.api .
+          docker tag ECR_REPOSITORY_RECOMMENDATIONS_API:latest ECR_REGISTRY_RECOMMENDATIONS_API/ECR_REPOSITORY_RECOMMENDATIONS_API:latest
+          docker push ECR_REGISTRY_RECOMMENDATIONS_API/ECR_REPOSITORY_RECOMMENDATIONS_API:latest
 
   build-and-push-scritps:
     name: Build & Push Scripts Docker Image
@@ -108,7 +108,7 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -117,10 +117,10 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
 
       - name: Build and push fill-database-scripts image to ECR
-#        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FILL_DATABASE_SCRIPTS }}
@@ -128,27 +128,3 @@ jobs:
           docker build -t $ECR_REPOSITORY -f Dockerfile.scripts .
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-
-
-#  terraform:
-#      runs-on: ubuntu-latest
-#      needs: [test-and-coverage, build-and-push-api, build-and-push-scritps]
-#      if: needs.test-and-coverage.result == 'success'
-#
-#      steps:
-#        - uses: actions/checkout@v3
-#
-#        - name: Setup Terraform
-#          uses: hashicorp/setup-terraform@v2
-#          with:
-#            terraform_version: 1.5.2
-#
-#        - name: Terraform Init
-#          run: terraform init ./infra
-#
-#        - name: Terraform Apply
-#          env:
-#            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#            aws-region: ${{ secrets.AWS_REGION }}
-#          run: terraform apply -auto-approve ./infra
