@@ -78,9 +78,9 @@ jobs:
           ECR_REGISTRY_RECOMMENDATIONS_API: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_RECOMMENDATIONS_API: ${{ secrets.ECR_REPOSITORY_RECOMMENDATIONS_API }}
         run: |
-          docker build -t ECR_REPOSITORY_RECOMMENDATIONS_API -f Dockerfile.api .
-          docker tag ECR_REPOSITORY_RECOMMENDATIONS_API:latest ECR_REGISTRY_RECOMMENDATIONS_API/ECR_REPOSITORY_RECOMMENDATIONS_API:latest
-          docker push ECR_REGISTRY_RECOMMENDATIONS_API/ECR_REPOSITORY_RECOMMENDATIONS_API:latest
+          docker build -t $ECR_REPOSITORY_RECOMMENDATIONS_API -f Dockerfile.api .
+          docker tag $ECR_REPOSITORY_RECOMMENDATIONS_API:latest $ECR_REGISTRY_RECOMMENDATIONS_API/ECR_REPOSITORY_RECOMMENDATIONS_API:latest
+          docker push $ECR_REGISTRY_RECOMMENDATIONS_API/$ECR_REPOSITORY_RECOMMENDATIONS_API:latest
 
   build-and-push-scritps:
     name: Build & Push Scripts Docker Image
