@@ -6,8 +6,12 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /app/certs && \
-    curl -o /app/certs/rds-combined-ca-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
+RUN apt-get update && \
+    apt-get install -y curl && \
+    mkdir -p /app/certs && \
+    curl -o /app/certs/rds-combined-ca-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem && \
+    apt-get remove -y curl && apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY src ./src
 
