@@ -1,4 +1,5 @@
 from fastapi import HTTPException, Query, APIRouter
+from fastapi.responses import JSONResponse
 
 from src.utils.format_perfume_id import format_perfumes_ids
 from src.perfumes.dto.user_input_query import UserInputQuery
@@ -10,6 +11,10 @@ from src.infra.logger import setup_logger
 
 router = APIRouter()
 logger = setup_logger("perfumes_controller")
+
+@router.get("/healthcheck")
+def health_check():
+    return JSONResponse(content={"status": "ok"})
 
 @router.get("/perfumes/search")
 def search_perfumes(
