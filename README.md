@@ -2,6 +2,11 @@
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](./README.md) [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](./docs/README.pt-br.md)
 
+## ⭐ Give a Star!
+If you liked my work and want to support me, please give it a star. Thanks!
+
+---
+
 ## Use Case
 This application aims to provide intelligent perfume recommendations based on each user's personal preferences. The API allows users to specify which perfumes they own, which ones they like or dislike, as well as olfactory notes and accords they enjoy or wish to avoid.
 
